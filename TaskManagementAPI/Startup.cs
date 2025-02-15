@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TaskManagement.Infraestructure.Data;
+
 public class Startup
 {
     public IConfiguration Configuration { get; }
@@ -11,16 +14,18 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseInMemoryDatabase("TasksDb"));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseHttpsRedirection();
 
-        if(env.IsDevelopment())
+        if (env.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(options => 
+            app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "TodoList v1");
                 options.RoutePrefix = string.Empty;
@@ -28,7 +33,7 @@ public class Startup
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints => 
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
