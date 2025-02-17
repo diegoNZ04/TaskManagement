@@ -10,7 +10,7 @@ namespace TaskManagement.Infraestructure.Data
         }
 
         public DbSet<User> Users { get; set; } = null!;
-        public DbSet<UserTask> UserTasks { get; set; } = null!;
+        public DbSet<TaskItem> TaskItem { get; set; } = null!;
         public DbSet<SubTask> SubTaks { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ namespace TaskManagement.Infraestructure.Data
                 .HasMany(e => e.Tasks)
                 .WithOne();
 
-            modelBuilder.Entity<UserTask>()
+            modelBuilder.Entity<TaskItem>()
                 .HasMany(e => e.SubTasks)
                 .WithOne();
         }
