@@ -21,7 +21,7 @@ namespace TaskManagement.Domain.Entities
         [Required]
         [MaxLength(12), MinLength(8)]
         public string PasswordHash { get; set; } = string.Empty;
-        public List<Task>? Tasks { get; } = null!;
+        public List<TaskItem>? Tasks { get; } = null!;
 
     }
 }

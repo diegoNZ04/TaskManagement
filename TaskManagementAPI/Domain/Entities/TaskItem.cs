@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TaskManagement.Domain.Entities
 {
-    public class UserTask
+    public class TaskItem
     {
         // Id
         [Key]
