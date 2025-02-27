@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TaskManagement.Infra.Data;
 
 namespace TaskManagement.API;
 
@@ -28,6 +30,9 @@ public class Startup
                 },
             });
         });
+
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseInMemoryDatabase("TaskManagement"));
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
