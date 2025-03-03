@@ -26,3 +26,4 @@ public class User
     // Tasks
     public ICollection<UserTask>? Tasks { get; set; } = [];
 }
+
