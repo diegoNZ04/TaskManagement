@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TaskManagement.Application.Mappings;
 using TaskManagement.Infra.Data;
 
 namespace TaskManagement.API;
@@ -33,6 +34,8 @@ public class Startup
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseInMemoryDatabase("TaskManagement"));
+
+        services.AddAutoMapper(typeof(UserProfile), typeof(UserTaskProfile), typeof(SubTaskProfile));
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
