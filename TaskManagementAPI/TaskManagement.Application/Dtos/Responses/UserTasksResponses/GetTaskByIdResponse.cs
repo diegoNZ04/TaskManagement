@@ -1,4 +1,4 @@
-using TaskManagement.Domain.Entities;
+using TaskManagement.Application.Dtos.Responses.SubTasksResponses;
 using TaskManagement.Domain.Enums;
 
 namespace TaskManagement.Application.Dtos.Responses.UserTasksResponses;
@@ -12,5 +12,5 @@ public class GetTaskByIdResponse
     public int UserId { get; set; }
     public bool IsCompleted { get; set; }
     public DateTime? CompletedAt { get; set; }
-    public ICollection<SubTask>? SubTasks { get; set; } = [];
+    public ICollection<CreateSubTaskResponse>? SubTasks { get; set; } = [];
 }
