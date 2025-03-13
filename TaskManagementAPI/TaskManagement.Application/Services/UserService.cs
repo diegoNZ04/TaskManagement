@@ -15,13 +15,13 @@ public class UserService : IUserService
         _userRepository = userRepository;
         _mapper = mapper;
     }
-    public async Task<CreateUserResponse> CreateUserAsync(string username, string password, string email)
+    public async Task<CreateUserResponse> CreateUserAsync(string username, string email, string password)
     {
         var user = _mapper.Map<User>(new CreateUserResponse
         {
             Username = username,
-            Password = password,
-            Email = email
+            Email = email,
+            Password = password
         });
 
         await _userRepository.AddUserAsync(user);

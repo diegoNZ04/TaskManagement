@@ -36,6 +36,17 @@ public class SubTaskService : ISubTaskService
             await _subTaskRepository.DeleteSubTaskAsync(subTask.Id);
     }
 
+    public async Task<GetSubTaskByIdResponse> GetSubTaskByIdAsync(int subTaskId)
+    {
+        var subTask = await _subTaskRepository.GetSubTaskByIdAsync(subTaskId);
+
+        if (subTask == null)
+            throw new Exception("SubTask Not Found.");
+
+        var subTaskDto = _mapper.Map<GetSubTaskByIdResponse>(subTask);
+        return subTaskDto;
+    }
+
     public async Task<UpdateSubTaskResponse> UpdateSubTaskAsync(int subTaskId, string description)
     {
         var subTask = await _subTaskRepository.GetSubTaskByIdAsync(subTaskId);
