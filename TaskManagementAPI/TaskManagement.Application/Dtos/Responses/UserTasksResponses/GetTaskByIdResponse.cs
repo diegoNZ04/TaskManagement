@@ -12,5 +12,5 @@ public class GetTaskByIdResponse
     public int UserId { get; set; }
     public bool IsCompleted { get; set; }
     public DateTime? CompletedAt { get; set; }
-    public ICollection<CreateSubTaskResponse>? SubTasks { get; set; } = [];
+    public List<CreateSubTaskResponse>? SubtaskTask { get; set; } = [];
 }
