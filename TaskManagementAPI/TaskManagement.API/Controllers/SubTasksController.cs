@@ -41,6 +41,7 @@ public class SubTasksController : ControllerBase
 
         return Ok(response);
     }
+    [HttpPut("update-subtask/{id}")]
     public async Task<IActionResult> UpdateSubTask(UpdateSubTaskRequest request, int id)
     {
         var subTask = await _subTaskService.GetSubTaskByIdAsync(id);
