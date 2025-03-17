@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TaskManagement.Application.Mappings;
+using TaskManagement.Application.Services;
+using TaskManagement.Application.Services.Interfaces;
 using TaskManagement.Infra.Data;
+using TaskManagement.Infra.Repositories;
+using TaskManagement.Infra.Repositories.Interfaces;
 
 namespace TaskManagement.API;
 
@@ -36,6 +40,13 @@ public class Startup
             options.UseInMemoryDatabase("TaskManagement"));
 
         services.AddAutoMapper(typeof(UserProfile), typeof(UserTaskProfile), typeof(SubTaskProfile));
+
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserTaskRepository, UserTaskRepository>();
+        services.AddScoped<ISubTaskRepository, SubTaskRepository>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserTaskService, UserTaskService>();
+        services.AddScoped<ISubTaskService, SubTaskService>();
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
@@ -51,7 +62,7 @@ public class Startup
         }
         app.UseHttpsRedirection();
         app.UseRouting();
-        app.UseAuthorization();
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
