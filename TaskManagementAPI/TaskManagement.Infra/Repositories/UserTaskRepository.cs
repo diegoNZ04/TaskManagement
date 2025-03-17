@@ -34,7 +34,9 @@ public class UserTaskRepository : IUserTaskRepository
 
     public async Task<UserTask> GetUserTaskByIdAsync(int id)
     {
-        return await _context.UserTasks.FirstOrDefaultAsync(u => u.Id == id);
+        return await _context.UserTasks
+        .Include(u => u.SubTasks)
+        .FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task UpdateUserTaskAsync(UserTask task)
