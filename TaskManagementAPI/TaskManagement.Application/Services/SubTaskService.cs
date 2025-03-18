@@ -61,6 +61,8 @@ public class SubTaskService : ISubTaskService
 
         _mapper.Map(updateSubTaskResponse, subTask);
 
+        await _subTaskRepository.UpdateSubTaskAsync(subTask);
+
         return _mapper.Map<UpdateSubTaskResponse>(subTask);
     }
 }
