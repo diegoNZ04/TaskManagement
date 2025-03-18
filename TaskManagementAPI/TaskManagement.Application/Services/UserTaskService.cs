@@ -16,6 +16,25 @@ public class UserTaskService : IUserTaskService
         _userTaskRepository = userTaskRepository;
         _mapper = mapper;
     }
+
+    public async Task<CompleteTaskResponse> CompleteTaskAsync(int taskId)
+    {
+        var task = await _userTaskRepository.GetUserTaskByIdAsync(taskId);
+
+        if (task == null)
+            throw new Exception("Task Not Found.");
+
+        if (task.IsCompleted)
+            throw new Exception("Task is already completed.");
+
+        task.IsCompleted = true;
+        task.CompletedAt = DateTime.UtcNow;
+
+        await _userTaskRepository.UpdateUserTaskAsync(task);
+
+        return _mapper.Map<CompleteTaskResponse>(task);
+    }
+
     public async Task<CreateTaskResponse> CreateTaskAsync(string title, string description, int userId, TaskPriority priority)
     {
         var task = _mapper.Map<UserTask>(new CreateTaskResponse

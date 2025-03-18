@@ -63,4 +63,10 @@ public class UserTasksController : ControllerBase
         var response = await _taskService.UpdateTaskAsync(task.Id, request.Title, request.Description, request.Priority);
         return Ok(response);
     }
+    [HttpPatch("{id}/complete")]
+    public async Task<IActionResult> CompleteTask(int id)
+    {
+        var response = await _taskService.CompleteTaskAsync(id);
+        return Ok(response);
+    }
 }

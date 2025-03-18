@@ -13,14 +13,11 @@ public class UserTask
     public string Description { get; set; } = string.Empty;
     public TaskPriority Priority { get; set; }
     public ICollection<SubTask>? SubTasks { get; set; } = [];
-    // FK UserId
     public int UserId { get; set; }
-    // Navigation Property
+
     [ForeignKey("UserId")]
     public User User { get; set; } = null!;
-    // IsCompleted
     public bool IsCompleted { get; set; } = false;
-    // CompletedAt 
     [DataType(DataType.DateTime)]
     public DateTime? CompletedAt { get; set; } = null;
 }

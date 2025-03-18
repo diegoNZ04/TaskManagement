@@ -5,6 +5,7 @@ namespace TaskManagement.Application.Services.Interfaces;
 
 public interface IUserTaskService
 {
+    Task<CompleteTaskResponse> CompleteTaskAsync(int taskId);
     Task<CreateTaskResponse> CreateTaskAsync(string title, string description, int userId, TaskPriority priority);
     Task<IEnumerable<GetAllTasksResponse>> GetAllTasksAsync();
     Task<GetTaskByIdResponse> GetTaskByIdAsync(int taskId);

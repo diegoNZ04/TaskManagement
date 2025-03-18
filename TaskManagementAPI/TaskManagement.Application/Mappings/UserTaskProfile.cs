@@ -14,6 +14,7 @@ public class UserTaskProfile : Profile
         CreateMap<UserTask, UpdateTaskRequest>().ReverseMap();
         CreateMap<UserTask, CreateTaskResponse>().ReverseMap();
         CreateMap<UserTask, UpdateTaskResponse>().ReverseMap();
+        CreateMap<UserTask, CompleteTaskResponse>().ReverseMap();
 
         CreateMap<UserTask, GetTaskByIdResponse>()
             .ForMember(dest => dest.SubtaskTask, opt => opt.MapFrom(src => src.SubTasks));
