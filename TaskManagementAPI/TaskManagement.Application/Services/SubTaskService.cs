@@ -15,6 +15,25 @@ public class SubTaskService : ISubTaskService
         _subTaskRepository = subTaskRepository;
         _mapper = mapper;
     }
+
+    public async Task<CompleteSubTaskResponse> CompleteSubTaskAsync(int subTaskId)
+    {
+        var task = await _subTaskRepository.GetSubTaskByIdAsync(subTaskId);
+
+        if (task == null)
+            throw new Exception("SubTask Not Found.");
+
+        if (task.IsCompleted)
+            throw new Exception("SubTask is already completed.");
+
+        task.IsCompleted = true;
+        task.CompletedAt = DateTime.UtcNow;
+
+        await _subTaskRepository.UpdateSubTaskAsync(task);
+
+        return _mapper.Map<CompleteSubTaskResponse>(task);
+    }
+
     public async Task<CreateSubTaskResponse> CreateSubTaskAsync(string description, int taskId)
     {
         var subTask = _mapper.Map<SubTask>(new CreateSubTaskResponse

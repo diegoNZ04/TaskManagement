@@ -52,5 +52,15 @@ public class SubTasksController : ControllerBase
         var response = await _subTaskService.UpdateSubTaskAsync(subTask.Id, request.Description);
         return Ok(response);
     }
+    [HttpPatch("{id}/complete-subtask")]
+    public async Task<IActionResult> CompleteSubTask(int id)
+    {
+        var subTask = await _subTaskService.GetSubTaskByIdAsync(id);
 
+        if (subTask == null)
+            return NotFound($"SubTask with ID {id} not found.");
+
+        var response = await _subTaskService.CompleteSubTaskAsync(subTask.Id);
+        return Ok(response);
+    }
 }

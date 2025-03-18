@@ -13,6 +13,7 @@ public class SubTaskProfile : Profile
         CreateMap<SubTask, UpdateSubTaskRequest>().ReverseMap();
         CreateMap<SubTask, CreateSubTaskResponse>().ReverseMap();
         CreateMap<SubTask, UpdateSubTaskResponse>().ReverseMap();
+        CreateMap<SubTask, CompleteSubTaskResponse>().ReverseMap();
         CreateMap<SubTask, GetSubTaskByIdResponse>();
     }
 }
