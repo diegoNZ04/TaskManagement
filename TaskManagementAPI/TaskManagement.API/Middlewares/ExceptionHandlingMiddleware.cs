@@ -32,6 +32,7 @@ public class ExceptionHandlingMiddleware
             {
                 NotFoundException => (HttpStatusCode.NotFound, ex.Message),
                 BadRequestException => (HttpStatusCode.BadRequest, ex.Message),
+                ValidationException ve => (HttpStatusCode.UnprocessableEntity, JsonSerializer.Serialize(ve.Errors)),
                 _ => (HttpStatusCode.InternalServerError, "An unexpected error occurred. Please try again later.")
             };
 
