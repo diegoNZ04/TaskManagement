@@ -7,6 +7,10 @@ using TaskManagement.Application.Services.Interfaces;
 using TaskManagement.Infra.Data;
 using TaskManagement.Infra.Repositories;
 using TaskManagement.Infra.Repositories.Interfaces;
+using TaskManagement.Application.Validators.SubTaskValidators;
+using FluentValidation;
+using TaskManagement.Application.Validators.TaskValidators;
+using TaskManagement.Application.Validators.UserValidators;
 
 namespace TaskManagement.API;
 
@@ -40,7 +44,17 @@ public class Startup
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseInMemoryDatabase("TaskManagement"));
 
-        services.AddAutoMapper(typeof(UserProfile), typeof(UserTaskProfile), typeof(SubTaskProfile));
+        services.AddAutoMapper(
+            typeof(UserProfile),
+            typeof(UserTaskProfile),
+            typeof(SubTaskProfile));
+
+        services.AddValidatorsFromAssemblyContaining<CreateSubTaskValidator>();
+        services.AddValidatorsFromAssemblyContaining<UpdateSubTaskValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateTaskValidator>();
+        services.AddValidatorsFromAssemblyContaining<UpdateTaskValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+        services.AddValidatorsFromAssemblyContaining<LoginUserValidator>();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserTaskRepository, UserTaskRepository>();
