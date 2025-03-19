@@ -1,5 +1,6 @@
 using AutoMapper;
 using TaskManagement.Application.Dtos.Responses.UserResponses;
+using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infra.Repositories.Interfaces;
@@ -51,7 +52,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetUserByIdAsync(userId);
 
         if (user == null)
-            throw new Exception("User Not Found.");
+            throw new NotFoundException("User Not Found.");
 
         var userDto = _mapper.Map<GetUserByIdResponse>(user);
         return userDto;

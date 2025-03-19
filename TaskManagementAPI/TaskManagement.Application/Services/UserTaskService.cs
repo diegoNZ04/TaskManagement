@@ -1,5 +1,6 @@
 using AutoMapper;
 using TaskManagement.Application.Dtos.Responses.UserTasksResponses;
+using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Domain.Enums;
@@ -22,10 +23,10 @@ public class UserTaskService : IUserTaskService
         var task = await _userTaskRepository.GetUserTaskByIdAsync(taskId);
 
         if (task == null)
-            throw new Exception("Task Not Found.");
+            throw new NotFoundException("Task Not Found.");
 
         if (task.IsCompleted)
-            throw new Exception("Task is already completed.");
+            throw new BadRequestException("Task is already completed.");
 
         task.IsCompleted = true;
         task.CompletedAt = DateTime.UtcNow;
@@ -72,7 +73,7 @@ public class UserTaskService : IUserTaskService
         var task = await _userTaskRepository.GetUserTaskByIdAsync(taskId);
 
         if (task == null)
-            throw new Exception("Task Not Found.");
+            throw new NotFoundException("Task Not Found.");
 
         var taskDto = _mapper.Map<GetTaskByIdResponse>(task);
         return taskDto;
@@ -83,7 +84,7 @@ public class UserTaskService : IUserTaskService
         var task = await _userTaskRepository.GetUserTaskByIdAsync(taskId);
 
         if (task == null)
-            throw new Exception("Task Not Found.");
+            throw new NotFoundException("Task Not Found.");
 
         var updateTaskResponse = new UpdateTaskResponse
         {

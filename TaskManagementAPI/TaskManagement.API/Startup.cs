@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TaskManagement.API.Middlewares;
 using TaskManagement.Application.Mappings;
 using TaskManagement.Application.Services;
 using TaskManagement.Application.Services.Interfaces;
@@ -62,6 +63,8 @@ public class Startup
         }
         app.UseHttpsRedirection();
         app.UseRouting();
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {

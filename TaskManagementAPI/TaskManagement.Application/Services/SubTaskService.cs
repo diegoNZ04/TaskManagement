@@ -1,5 +1,6 @@
 using AutoMapper;
 using TaskManagement.Application.Dtos.Responses.SubTasksResponses;
+using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infra.Repositories.Interfaces;
@@ -21,10 +22,10 @@ public class SubTaskService : ISubTaskService
         var task = await _subTaskRepository.GetSubTaskByIdAsync(subTaskId);
 
         if (task == null)
-            throw new Exception("SubTask Not Found.");
+            throw new NotFoundException("SubTask Not Found.");
 
         if (task.IsCompleted)
-            throw new Exception("SubTask is already completed.");
+            throw new BadRequestException("SubTask is already completed.");
 
         task.IsCompleted = true;
         task.CompletedAt = DateTime.UtcNow;
