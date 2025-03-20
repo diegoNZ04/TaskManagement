@@ -1,7 +1,9 @@
 using AutoMapper;
+using FluentValidation;
 using TaskManagement.Application.Dtos.Responses.SubTasksResponses;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
+using TaskManagement.Application.Validators.SubTaskValidators;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infra.Repositories.Interfaces;
 
@@ -11,28 +13,32 @@ public class SubTaskService : ISubTaskService
 {
     private readonly ISubTaskRepository _subTaskRepository;
     private readonly IMapper _mapper;
-    public SubTaskService(ISubTaskRepository subTaskRepository, IMapper mapper)
+    private readonly IValidator<CreateSubTaskValidator> _createSubTaskValidator;
+    private readonly IValidator<UpdateSubTaskValidator> _updateSubTaskValidator;
+    public SubTaskService(ISubTaskRepository subTaskRepository, IMapper mapper, IValidator<CreateSubTaskValidator> createSubTaskValidator, IValidator<UpdateSubTaskValidator> updateSubTaskValidator)
     {
         _subTaskRepository = subTaskRepository;
         _mapper = mapper;
+        _createSubTaskValidator = createSubTaskValidator;
+        _updateSubTaskValidator = updateSubTaskValidator;
     }
 
     public async Task<CompleteSubTaskResponse> CompleteSubTaskAsync(int subTaskId)
     {
-        var task = await _subTaskRepository.GetSubTaskByIdAsync(subTaskId);
+        var subTaks = await _subTaskRepository.GetSubTaskByIdAsync(subTaskId);
 
-        if (task == null)
+        if (subTaks == null)
             throw new NotFoundException("SubTask Not Found.");
 
-        if (task.IsCompleted)
+        if (subTaks.IsCompleted)
             throw new BadRequestException("SubTask is already completed.");
 
-        task.IsCompleted = true;
-        task.CompletedAt = DateTime.UtcNow;
+        subTaks.IsCompleted = true;
+        subTaks.CompletedAt = DateTime.UtcNow;
 
-        await _subTaskRepository.UpdateSubTaskAsync(task);
+        await _subTaskRepository.UpdateSubTaskAsync(subTaks);
 
-        return _mapper.Map<CompleteSubTaskResponse>(task);
+        return _mapper.Map<CompleteSubTaskResponse>(subTaks);
     }
 
     public async Task<CreateSubTaskResponse> CreateSubTaskAsync(string description, int taskId)
@@ -42,6 +48,12 @@ public class SubTaskService : ISubTaskService
             Description = description,
             UserTaskId = taskId
         });
+
+        var validationContext = new ValidationContext<SubTask>(subTask);
+        var validationResult = await _createSubTaskValidator.ValidateAsync(validationContext);
+
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
         await _subTaskRepository.AddSubTaskAsync(subTask);
 
@@ -61,7 +73,7 @@ public class SubTaskService : ISubTaskService
         var subTask = await _subTaskRepository.GetSubTaskByIdAsync(subTaskId);
 
         if (subTask == null)
-            throw new Exception("SubTask Not Found.");
+            throw new NotFoundException("SubTask Not Found.");
 
         var subTaskDto = _mapper.Map<GetSubTaskByIdResponse>(subTask);
         return subTaskDto;
@@ -72,7 +84,7 @@ public class SubTaskService : ISubTaskService
         var subTask = await _subTaskRepository.GetSubTaskByIdAsync(subTaskId);
 
         if (subTask == null)
-            throw new Exception("SubTask Not Found.");
+            throw new NotFoundException("SubTask Not Found.");
 
         var updateSubTaskResponse = new UpdateSubTaskResponse
         {
@@ -80,6 +92,12 @@ public class SubTaskService : ISubTaskService
         };
 
         _mapper.Map(updateSubTaskResponse, subTask);
+
+        var validationContext = new ValidationContext<SubTask>(subTask);
+        var validationResult = await _updateSubTaskValidator.ValidateAsync(validationContext);
+
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
         await _subTaskRepository.UpdateSubTaskAsync(subTask);
 

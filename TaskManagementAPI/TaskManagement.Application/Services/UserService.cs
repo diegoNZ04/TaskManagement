@@ -1,7 +1,9 @@
 using AutoMapper;
+using FluentValidation;
 using TaskManagement.Application.Dtos.Responses.UserResponses;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
+using TaskManagement.Application.Validators.UserValidators;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infra.Repositories.Interfaces;
 
@@ -11,10 +13,12 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
-    public UserService(IUserRepository userRepository, IMapper mapper)
+    private readonly IValidator<CreateUserValidator> _createUserValidator;
+    public UserService(IUserRepository userRepository, IMapper mapper, IValidator<CreateUserValidator> createUserValidator)
     {
         _userRepository = userRepository;
         _mapper = mapper;
+        _createUserValidator = createUserValidator;
     }
     public async Task<CreateUserResponse> CreateUserAsync(string username, string email, string password)
     {
@@ -24,6 +28,12 @@ public class UserService : IUserService
             Email = email,
             Password = password
         });
+
+        var validationContext = new ValidationContext<User>(user);
+        var validationResult = await _createUserValidator.ValidateAsync(validationContext);
+
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
         await _userRepository.AddUserAsync(user);
 

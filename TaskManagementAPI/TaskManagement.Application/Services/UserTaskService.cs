@@ -1,7 +1,9 @@
 using AutoMapper;
+using FluentValidation;
 using TaskManagement.Application.Dtos.Responses.UserTasksResponses;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
+using TaskManagement.Application.Validators.TaskValidators;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Domain.Enums;
 using TaskManagement.Infra.Repositories.Interfaces;
@@ -12,10 +14,14 @@ public class UserTaskService : IUserTaskService
 {
     private readonly IUserTaskRepository _userTaskRepository;
     private readonly IMapper _mapper;
-    public UserTaskService(IUserTaskRepository userTaskRepository, IMapper mapper)
+    private readonly IValidator<CreateTaskValidator> _createTaskValidator;
+    private readonly IValidator<UpdateTaskValidator> _updateTaskValidator;
+    public UserTaskService(IUserTaskRepository userTaskRepository, IMapper mapper, IValidator<CreateTaskValidator> createTaskValidator, IValidator<UpdateTaskValidator> updateTaskValidator)
     {
         _userTaskRepository = userTaskRepository;
         _mapper = mapper;
+        _createTaskValidator = createTaskValidator;
+        _updateTaskValidator = updateTaskValidator;
     }
 
     public async Task<CompleteTaskResponse> CompleteTaskAsync(int taskId)
@@ -45,6 +51,12 @@ public class UserTaskService : IUserTaskService
             UserId = userId,
             Priority = priority
         });
+
+        var validationContext = new ValidationContext<UserTask>(task);
+        var validationResult = await _createTaskValidator.ValidateAsync(validationContext);
+
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
         await _userTaskRepository.AddUserTaskAsync(task);
 
@@ -94,6 +106,12 @@ public class UserTaskService : IUserTaskService
         };
 
         _mapper.Map(updateTaskResponse, task);
+
+        var validationContext = new ValidationContext<UserTask>(task);
+        var validationResult = await _updateTaskValidator.ValidateAsync(validationContext);
+
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
         await _userTaskRepository.UpdateUserTaskAsync(task);
 
