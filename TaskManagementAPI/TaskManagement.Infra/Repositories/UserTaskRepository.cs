@@ -29,7 +29,7 @@ public class UserTaskRepository : IUserTaskRepository
 
     public async Task<IEnumerable<UserTask>> GetAllUserTasksAsync()
     {
-        return await _context.UserTasks.ToListAsync();
+        return await _context.UserTasks.AsNoTracking().ToListAsync();
     }
 
     public async Task<UserTask> GetUserTaskByIdAsync(int id)

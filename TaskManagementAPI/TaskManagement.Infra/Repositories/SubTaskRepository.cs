@@ -28,7 +28,7 @@ public class SubTaskRepository : ISubTaskRepository
 
     public async Task<IEnumerable<SubTask>> GetAllSubTasksAsync()
     {
-        return await _context.SubTasks.ToListAsync();
+        return await _context.SubTasks.AsNoTracking().ToListAsync();
     }
 
     public async Task<SubTask> GetSubTaskByIdAsync(int id)
