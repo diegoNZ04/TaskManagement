@@ -14,19 +14,23 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
     private readonly IValidator<CreateUserValidator> _createUserValidator;
-    public UserService(IUserRepository userRepository, IMapper mapper, IValidator<CreateUserValidator> createUserValidator)
+    private readonly IHasherService _hasherService;
+    public UserService(IUserRepository userRepository, IMapper mapper, IValidator<CreateUserValidator> createUserValidator, IHasherService hasherService)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _createUserValidator = createUserValidator;
+        _hasherService = hasherService;
     }
     public async Task<CreateUserResponse> CreateUserAsync(string username, string email, string password)
     {
+        var hashedpassword = _hasherService.HashPassword(password);
+
         var user = _mapper.Map<User>(new CreateUserResponse
         {
             Username = username,
             Email = email,
-            Password = password
+            Password = hashedpassword
         });
 
         var validationContext = new ValidationContext<User>(user);
