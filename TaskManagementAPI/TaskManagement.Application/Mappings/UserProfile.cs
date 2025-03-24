@@ -21,6 +21,10 @@ public class UserProfile : Profile
             .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.PasswordHash))
             .ReverseMap();
 
+        CreateMap<User, LoginUserResponse>()
+            .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.PasswordHash))
+            .ReverseMap();
+
         CreateMap<User, GetUserByIdResponse>()
         .ForMember(dest => dest.TasksUser, opt => opt.MapFrom(src => src.Tasks));
 
