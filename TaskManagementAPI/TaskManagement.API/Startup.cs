@@ -62,6 +62,9 @@ public class Startup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserTaskService, UserTaskService>();
         services.AddScoped<ISubTaskService, SubTaskService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IHasherService, HasherService>();
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
