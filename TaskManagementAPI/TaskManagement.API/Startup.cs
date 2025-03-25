@@ -11,6 +11,9 @@ using TaskManagement.Application.Validators.SubTaskValidators;
 using FluentValidation;
 using TaskManagement.Application.Validators.TaskValidators;
 using TaskManagement.Application.Validators.UserValidators;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace TaskManagement.API;
 
@@ -39,10 +42,52 @@ public class Startup
                     Email = "diegoamorim03152004@gmail.com"
                 },
             });
+
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Insira o token JWT no campo abaixo. Exemplo: 'Bearer seu-token aqui'"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Id = "Bearer",
+                            Type = ReferenceType.SecurityScheme
+                        }
+                    },
+                    new string[] { }
+                }
+            });
         });
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseInMemoryDatabase("TaskManagement"));
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });
+
+        services.AddAuthorization();
 
         services.AddAutoMapper(
             typeof(UserProfile),
@@ -82,6 +127,9 @@ public class Startup
         app.UseRouting();
 
         app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
