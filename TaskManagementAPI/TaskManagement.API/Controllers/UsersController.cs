@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Dtos.Requests.UserResquests;
 using TaskManagement.Application.Services.Interfaces;
@@ -19,7 +20,7 @@ public class UsersController : ControllerBase
         var response = await _userService.CreateUserAsync(request.Username, request.Email, request.Password);
         return CreatedAtAction(nameof(GetUserById), new { id = response.Id }, response);
     }
-
+    [Authorize]
     [HttpDelete("delete-user/{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
@@ -32,7 +33,7 @@ public class UsersController : ControllerBase
 
         return NoContent();
     }
-
+    [Authorize]
     [HttpGet("get-all-users")]
     public async Task<IActionResult> GetAllUsers()
     {
@@ -43,7 +44,7 @@ public class UsersController : ControllerBase
 
         return Ok(new { users });
     }
-
+    [Authorize]
     [HttpGet("get-user-by-id/{id}")]
     public async Task<IActionResult> GetUserById(int id)
     {

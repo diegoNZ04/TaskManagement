@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Dtos.Requests.SubTasksRequests;
 using TaskManagement.Application.Services.Interfaces;
@@ -13,12 +14,14 @@ public class SubTasksController : ControllerBase
     {
         _subTaskService = subTaskService;
     }
+    [Authorize]
     [HttpPost("create-subtask")]
     public async Task<IActionResult> CreateSubTask([FromBody] CreateSubTaskRequest request)
     {
         var response = await _subTaskService.CreateSubTaskAsync(request.Description, request.UserTaskId);
         return CreatedAtAction(nameof(GetSubTaskById), new { id = response.Id }, response);
     }
+    [Authorize]
     [HttpDelete("delete-subtask/{id}")]
     public async Task<IActionResult> DeleteSubTask(int id)
     {
@@ -31,6 +34,7 @@ public class SubTasksController : ControllerBase
 
         return NoContent();
     }
+    [Authorize]
     [HttpGet("get-subtask-by-id/{id}")]
     public async Task<IActionResult> GetSubTaskById(int id)
     {
@@ -41,6 +45,7 @@ public class SubTasksController : ControllerBase
 
         return Ok(response);
     }
+    [Authorize]
     [HttpPut("update-subtask/{id}")]
     public async Task<IActionResult> UpdateSubTask(UpdateSubTaskRequest request, int id)
     {
@@ -52,6 +57,7 @@ public class SubTasksController : ControllerBase
         var response = await _subTaskService.UpdateSubTaskAsync(subTask.Id, request.Description);
         return Ok(response);
     }
+    [Authorize]
     [HttpPatch("complete-subtask/{id}")]
     public async Task<IActionResult> CompleteSubTask(int id)
     {

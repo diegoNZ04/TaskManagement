@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Dtos.Requests;
 using TaskManagement.Application.Dtos.Requests.UserTasksRequests;
@@ -14,12 +15,14 @@ public class UserTasksController : ControllerBase
     {
         _taskService = taskService;
     }
+    [Authorize]
     [HttpPost("create-task")]
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)
     {
         var response = await _taskService.CreateTaskAsync(request.Title, request.Description, request.UserId, request.Priority);
         return CreatedAtAction(nameof(GetTaskById), new { id = response.Id }, response);
     }
+    [Authorize]
     [HttpDelete("delete-task/{id}")]
     public async Task<IActionResult> DeleteTask(int id)
     {
@@ -32,6 +35,7 @@ public class UserTasksController : ControllerBase
 
         return NoContent();
     }
+    [Authorize]
     [HttpGet("get-all-tasks")]
     public async Task<IActionResult> GetAllTasks()
     {
@@ -42,6 +46,7 @@ public class UserTasksController : ControllerBase
 
         return Ok(new { tasks });
     }
+    [Authorize]
     [HttpGet("get-task-by-id/{id}")]
     public async Task<IActionResult> GetTaskById(int id)
     {
@@ -52,6 +57,7 @@ public class UserTasksController : ControllerBase
 
         return Ok(response);
     }
+    [Authorize]
     [HttpPut("update-task/{id}")]
     public async Task<IActionResult> UpdateTask(UpdateTaskRequest request, int id)
     {
@@ -63,6 +69,7 @@ public class UserTasksController : ControllerBase
         var response = await _taskService.UpdateTaskAsync(task.Id, request.Title, request.Description, request.Priority);
         return Ok(response);
     }
+    [Authorize]
     [HttpPatch("complete-task/{id}")]
     public async Task<IActionResult> CompleteTask(int id)
     {
