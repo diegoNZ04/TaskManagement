@@ -1,4 +1,6 @@
 using AutoMapper;
+using FluentValidation;
+using TaskManagement.Application.Dtos.Requests.UserResquests;
 using TaskManagement.Application.Dtos.Responses.UserResponses;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
@@ -13,27 +15,37 @@ public class AuthService : IAuthService
     private readonly IMapper _mapper;
     private readonly IJwtService _jwtService;
     private readonly IHasherService _hasherService;
-    public AuthService(IUserRepository userRepository, IMapper mapper, IHasherService hasherService, IJwtService jwtService)
+    private readonly IValidator<LoginUserRequest> _loginUserValidator;
+    public AuthService(
+        IUserRepository userRepository,
+        IMapper mapper,
+        IHasherService hasherService,
+        IJwtService jwtService,
+        IValidator<LoginUserRequest> loginUserValidator)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _hasherService = hasherService;
         _jwtService = jwtService;
+        _loginUserValidator = loginUserValidator;
     }
 
-    public async Task<LoginUserResponse> AuthenticateAsync(string email, string password)
+    public async Task<LoginUserResponse> AuthenticateAsync(LoginUserRequest request)
     {
-        var user = await _userRepository.GetUserByEmailAsync(email);
+        var validationResult = await _loginUserValidator.ValidateAsync(request);
 
-        if (user == null || !_hasherService.VerifyPassword(password, user.PasswordHash))
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
+
+        var user = await _userRepository.GetUserByEmailAsync(request.Email);
+
+        if (user == null || !_hasherService.VerifyPassword(request.Password, user.PasswordHash))
             throw new UnauthorizedException("Invalid credentials.");
 
         var token = _jwtService.GenerateToken(user);
 
         var loginReq = _mapper.Map<User>(new LoginUserResponse
         {
-            Email = email,
-            Password = password,
             Token = token
         });
 
