@@ -52,13 +52,13 @@ public class UserService : IUserService
             await _userRepository.DeleteUserAsync(user.Id);
     }
 
-    public async Task<IEnumerable<GetAllUsersResponse>> GetAllUsersAsync()
+    public async Task<(IEnumerable<GetAllUsersResponse> Users, int TotalCount)> GetAllUsersAsync(int page, int pageSize)
     {
-        var users = await _userRepository.GetAllUsersAsync();
+        var (users, totalCount) = await _userRepository.GetAllUsersAsync(page, pageSize);
 
         var usersDto = _mapper.Map<IEnumerable<GetAllUsersResponse>>(users);
 
-        return usersDto;
+        return (usersDto, totalCount);
     }
 
     public async Task<GetUserByIdResponse> GetUserByIdAsync(int userId)

@@ -71,13 +71,13 @@ public class UserTaskService : IUserTaskService
             await _userTaskRepository.DeleteUserTaskAsync(task.Id);
     }
 
-    public async Task<IEnumerable<GetAllTasksResponse>> GetAllTasksAsync()
+    public async Task<(IEnumerable<GetAllTasksResponse> Tasks, int TotalCount)> GetAllTasksAsync(int page, int pageSize)
     {
-        var tasks = await _userTaskRepository.GetAllUserTasksAsync();
+        var (tasks, totalCount) = await _userTaskRepository.GetAllUserTasksAsync(page, pageSize);
 
         var tasksDto = _mapper.Map<IEnumerable<GetAllTasksResponse>>(tasks);
 
-        return tasksDto;
+        return (tasksDto, totalCount);
     }
 
     public async Task<GetTaskByIdResponse> GetTaskByIdAsync(int taskId)

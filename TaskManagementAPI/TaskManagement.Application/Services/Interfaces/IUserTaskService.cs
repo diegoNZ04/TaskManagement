@@ -7,7 +7,7 @@ public interface IUserTaskService
 {
     Task<CompleteTaskResponse> CompleteTaskAsync(int taskId);
     Task<CreateTaskResponse> CreateTaskAsync(string title, string description, int userId, TaskPriority priority);
-    Task<IEnumerable<GetAllTasksResponse>> GetAllTasksAsync();
+    Task<(IEnumerable<GetAllTasksResponse> Tasks, int TotalCount)> GetAllTasksAsync(int page, int pageSize);
     Task<GetTaskByIdResponse> GetTaskByIdAsync(int taskId);
     Task<UpdateTaskResponse> UpdateTaskAsync(int taskId, string title, string description, TaskPriority priority);
     Task DeleteTaskAsync(int taskId);

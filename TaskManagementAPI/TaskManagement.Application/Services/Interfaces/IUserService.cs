@@ -6,6 +6,6 @@ public interface IUserService
 {
     Task<CreateUserResponse> CreateUserAsync(string username, string password, string email);
     Task DeleteUserAsync(int userId);
-    Task<IEnumerable<GetAllUsersResponse>> GetAllUsersAsync();
+    Task<(IEnumerable<GetAllUsersResponse> Users, int TotalCount)> GetAllUsersAsync(int page, int pageSize);
     Task<GetUserByIdResponse> GetUserByIdAsync(int userId);
 }

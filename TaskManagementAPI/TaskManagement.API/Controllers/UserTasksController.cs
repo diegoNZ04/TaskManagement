@@ -37,14 +37,26 @@ public class UserTasksController : ControllerBase
     }
     [Authorize]
     [HttpGet("get-all-tasks")]
-    public async Task<IActionResult> GetAllTasks()
+    public async Task<IActionResult> GetAllTasks([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var tasks = await _taskService.GetAllTasksAsync();
+        var (tasks, totalCount) = await _taskService.GetAllTasksAsync(page, pageSize);
 
         if (!tasks.Any())
             return NoContent();
 
-        return Ok(new { tasks });
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+        return Ok(new
+        {
+            tasks,
+            pagination = new
+            {
+                currentPage = page,
+                pageSize,
+                totalItems = totalCount,
+                totalPages
+            }
+        });
     }
     [Authorize]
     [HttpGet("get-task-by-id/{id}")]

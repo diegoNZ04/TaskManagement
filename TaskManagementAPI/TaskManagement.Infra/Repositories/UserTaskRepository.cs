@@ -27,9 +27,16 @@ public class UserTaskRepository : IUserTaskRepository
 
     }
 
-    public async Task<IEnumerable<UserTask>> GetAllUserTasksAsync()
+    public async Task<(IEnumerable<UserTask> Tasks, int TotalCount)> GetAllUserTasksAsync(int page, int pageSize)
     {
-        return await _context.UserTasks.AsNoTracking().ToListAsync();
+        var tasks = await _context.UserTasks.AsNoTracking()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var totalCount = await _context.UserTasks.CountAsync();
+
+        return (tasks, totalCount);
     }
 
     public async Task<UserTask> GetUserTaskByIdAsync(int id)

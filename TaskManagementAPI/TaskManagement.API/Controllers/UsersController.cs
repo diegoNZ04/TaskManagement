@@ -35,14 +35,26 @@ public class UsersController : ControllerBase
     }
     [Authorize]
     [HttpGet("get-all-users")]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<IActionResult> GetAllUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var users = await _userService.GetAllUsersAsync();
+        var (users, totalCount) = await _userService.GetAllUsersAsync(page, pageSize);
 
         if (!users.Any())
             return NoContent();
 
-        return Ok(new { users });
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+        return Ok(new
+        {
+            users,
+            pagination = new
+            {
+                currentPage = page,
+                pageSize,
+                totalItems = totalCount,
+                totalPages
+            }
+        });
     }
     [Authorize]
     [HttpGet("get-user-by-id/{id}")]
