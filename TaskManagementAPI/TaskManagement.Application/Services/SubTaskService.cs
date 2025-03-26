@@ -1,5 +1,7 @@
+using System.Net.Cache;
 using AutoMapper;
 using FluentValidation;
+using TaskManagement.Application.Dtos.Requests.SubTasksRequests;
 using TaskManagement.Application.Dtos.Responses.SubTasksResponses;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
@@ -13,9 +15,12 @@ public class SubTaskService : ISubTaskService
 {
     private readonly ISubTaskRepository _subTaskRepository;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateSubTaskValidator> _createSubTaskValidator;
-    private readonly IValidator<UpdateSubTaskValidator> _updateSubTaskValidator;
-    public SubTaskService(ISubTaskRepository subTaskRepository, IMapper mapper, IValidator<CreateSubTaskValidator> createSubTaskValidator, IValidator<UpdateSubTaskValidator> updateSubTaskValidator)
+    private readonly IValidator<CreateSubTaskRequest> _createSubTaskValidator;
+    private readonly IValidator<UpdateSubTaskRequest> _updateSubTaskValidator;
+    public SubTaskService(
+        ISubTaskRepository subTaskRepository,
+        IMapper mapper, IValidator<CreateSubTaskRequest> createSubTaskValidator,
+        IValidator<UpdateSubTaskRequest> updateSubTaskValidator)
     {
         _subTaskRepository = subTaskRepository;
         _mapper = mapper;
@@ -41,19 +46,14 @@ public class SubTaskService : ISubTaskService
         return _mapper.Map<CompleteSubTaskResponse>(subTaks);
     }
 
-    public async Task<CreateSubTaskResponse> CreateSubTaskAsync(string description, int taskId)
+    public async Task<CreateSubTaskResponse> CreateSubTaskAsync(CreateSubTaskRequest request)
     {
-        var subTask = _mapper.Map<SubTask>(new CreateSubTaskResponse
-        {
-            Description = description,
-            UserTaskId = taskId
-        });
-
-        var validationContext = new ValidationContext<SubTask>(subTask);
-        var validationResult = await _createSubTaskValidator.ValidateAsync(validationContext);
+        var validationResult = await _createSubTaskValidator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
+
+        var subTask = _mapper.Map<SubTask>(request);
 
         await _subTaskRepository.AddSubTaskAsync(subTask);
 

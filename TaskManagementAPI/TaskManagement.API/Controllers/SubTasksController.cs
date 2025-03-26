@@ -18,7 +18,7 @@ public class SubTasksController : ControllerBase
     [HttpPost("create-subtask")]
     public async Task<IActionResult> CreateSubTask([FromBody] CreateSubTaskRequest request)
     {
-        var response = await _subTaskService.CreateSubTaskAsync(request.Description, request.UserTaskId);
+        var response = await _subTaskService.CreateSubTaskAsync(request);
         return CreatedAtAction(nameof(GetSubTaskById), new { id = response.Id }, response);
     }
     [Authorize]

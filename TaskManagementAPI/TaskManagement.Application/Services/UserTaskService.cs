@@ -1,5 +1,7 @@
 using AutoMapper;
 using FluentValidation;
+using TaskManagement.Application.Dtos.Requests;
+using TaskManagement.Application.Dtos.Requests.UserTasksRequests;
 using TaskManagement.Application.Dtos.Responses.UserTasksResponses;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
@@ -14,9 +16,13 @@ public class UserTaskService : IUserTaskService
 {
     private readonly IUserTaskRepository _userTaskRepository;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateTaskValidator> _createTaskValidator;
-    private readonly IValidator<UpdateTaskValidator> _updateTaskValidator;
-    public UserTaskService(IUserTaskRepository userTaskRepository, IMapper mapper, IValidator<CreateTaskValidator> createTaskValidator, IValidator<UpdateTaskValidator> updateTaskValidator)
+    private readonly IValidator<CreateTaskRequest> _createTaskValidator;
+    private readonly IValidator<UpdateTaskRequest> _updateTaskValidator;
+    public UserTaskService(
+        IUserTaskRepository userTaskRepository,
+        IMapper mapper,
+        IValidator<CreateTaskRequest> createTaskValidator,
+        IValidator<UpdateTaskRequest> updateTaskValidator)
     {
         _userTaskRepository = userTaskRepository;
         _mapper = mapper;
@@ -42,21 +48,14 @@ public class UserTaskService : IUserTaskService
         return _mapper.Map<CompleteTaskResponse>(task);
     }
 
-    public async Task<CreateTaskResponse> CreateTaskAsync(string title, string description, int userId, TaskPriority priority)
+    public async Task<CreateTaskResponse> CreateTaskAsync(CreateTaskRequest request)
     {
-        var task = _mapper.Map<UserTask>(new CreateTaskResponse
-        {
-            Title = title,
-            Description = description,
-            UserId = userId,
-            Priority = priority
-        });
-
-        var validationContext = new ValidationContext<UserTask>(task);
-        var validationResult = await _createTaskValidator.ValidateAsync(validationContext);
+        var validationResult = await _createTaskValidator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
+
+        var task = _mapper.Map<UserTask>(request);
 
         await _userTaskRepository.AddUserTaskAsync(task);
 

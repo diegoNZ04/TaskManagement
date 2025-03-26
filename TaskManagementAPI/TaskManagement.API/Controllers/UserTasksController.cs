@@ -19,7 +19,7 @@ public class UserTasksController : ControllerBase
     [HttpPost("create-task")]
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)
     {
-        var response = await _taskService.CreateTaskAsync(request.Title, request.Description, request.UserId, request.Priority);
+        var response = await _taskService.CreateTaskAsync(request);
         return CreatedAtAction(nameof(GetTaskById), new { id = response.Id }, response);
     }
     [Authorize]

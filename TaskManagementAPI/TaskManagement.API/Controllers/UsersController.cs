@@ -17,7 +17,7 @@ public class UsersController : ControllerBase
     [HttpPost("register-user")]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
     {
-        var response = await _userService.CreateUserAsync(request.Username, request.Email, request.Password);
+        var response = await _userService.CreateUserAsync(request);
         return CreatedAtAction(nameof(GetUserById), new { id = response.Id }, response);
     }
     [Authorize]

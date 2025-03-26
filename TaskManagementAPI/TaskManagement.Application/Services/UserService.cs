@@ -1,9 +1,9 @@
 using AutoMapper;
 using FluentValidation;
+using TaskManagement.Application.Dtos.Requests.UserResquests;
 using TaskManagement.Application.Dtos.Responses.UserResponses;
 using TaskManagement.Application.Exceptions;
 using TaskManagement.Application.Services.Interfaces;
-using TaskManagement.Application.Validators.UserValidators;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infra.Repositories.Interfaces;
 
@@ -13,31 +13,26 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateUserValidator> _createUserValidator;
+    private readonly IValidator<CreateUserRequest> _createUserValidator;
     private readonly IHasherService _hasherService;
-    public UserService(IUserRepository userRepository, IMapper mapper, IValidator<CreateUserValidator> createUserValidator, IHasherService hasherService)
+    public UserService(IUserRepository userRepository, IMapper mapper, IValidator<CreateUserRequest> createUserValidator, IHasherService hasherService)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _createUserValidator = createUserValidator;
         _hasherService = hasherService;
     }
-    public async Task<CreateUserResponse> CreateUserAsync(string username, string email, string password)
+    public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequest request)
     {
-        var hashedpassword = _hasherService.HashPassword(password);
-
-        var user = _mapper.Map<User>(new CreateUserResponse
-        {
-            Username = username,
-            Email = email,
-            Password = hashedpassword
-        });
-
-        var validationContext = new ValidationContext<User>(user);
-        var validationResult = await _createUserValidator.ValidateAsync(validationContext);
+        var validationResult = await _createUserValidator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
+
+        var hashedpassword = _hasherService.HashPassword(request.Password);
+
+        var user = _mapper.Map<User>(request);
+        user.PasswordHash = hashedpassword;
 
         await _userRepository.AddUserAsync(user);
 
