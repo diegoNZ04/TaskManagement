@@ -14,6 +14,11 @@ using TaskManagement.Application.Validators.UserValidators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TaskManagement.Application.Dtos.Requests.UserResquests;
+using TaskManagement.Application.Dtos.Requests.SubTasksRequests;
+using TaskManagement.Application.Dtos.Requests;
+using TaskManagement.Application.Dtos.Requests.UserTasksRequests;
+using FluentValidation.AspNetCore;
 
 namespace TaskManagement.API;
 
@@ -50,7 +55,7 @@ public class Startup
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Insira o token JWT no campo abaixo. Exemplo: 'Bearer seu-token aqui'"
+                Description = "Enter the JWT token in the field below."
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -94,12 +99,21 @@ public class Startup
             typeof(UserTaskProfile),
             typeof(SubTaskProfile));
 
-        services.AddValidatorsFromAssemblyContaining<CreateSubTaskValidator>();
-        services.AddValidatorsFromAssemblyContaining<UpdateSubTaskValidator>();
-        services.AddValidatorsFromAssemblyContaining<CreateTaskValidator>();
-        services.AddValidatorsFromAssemblyContaining<UpdateTaskValidator>();
+        services.AddFluentValidationAutoValidation();
+
         services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
         services.AddValidatorsFromAssemblyContaining<LoginUserValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateTaskValidator>();
+        services.AddValidatorsFromAssemblyContaining<UpdateTaskValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateSubTaskValidator>();
+        services.AddValidatorsFromAssemblyContaining<UpdateSubTaskValidator>();
+
+        services.AddScoped<IValidator<CreateSubTaskRequest>, CreateSubTaskValidator>();
+        services.AddScoped<IValidator<UpdateSubTaskRequest>, UpdateSubTaskValidator>();
+        services.AddScoped<IValidator<CreateTaskRequest>, CreateTaskValidator>();
+        services.AddScoped<IValidator<UpdateTaskRequest>, UpdateTaskValidator>();
+        services.AddScoped<IValidator<CreateUserRequest>, CreateUserValidator>();
+        services.AddScoped<IValidator<LoginUserRequest>, LoginUserValidator>();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserTaskRepository, UserTaskRepository>();
@@ -110,6 +124,7 @@ public class Startup
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IHasherService, HasherService>();
+
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
