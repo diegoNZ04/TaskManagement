@@ -1,1 +1,106 @@
-<p>management-panel works!</p>
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Task Manager</span>
+  <span class="toolbar-spacer"></span>
+</mat-toolbar>
+
+<mat-sidenav-container style="height: calc(100vh - 64px)">
+  <mat-sidenav #sidenav mode="side">
+    <div class="profile-content">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>User Profile</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon matListItemIcon>account_circle</mat-icon>
+              <span matListItemTitle>John Doe</span>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon matListItemIcon>email</mat-icon>
+              <span matListItemTitle>emailexample.com</span>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="main-content">
+      <!-- Task Input Form -->
+      <mat-card>
+        <mat-card-content>
+          <form class="task-form" (ngSubmit)="addTask()">
+            <mat-form-field appearance="fill">
+              <mat-label>Task Title</mat-label>
+              <input
+                matInput
+                [(ngModel)]="newTask.title"
+                name="title"
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Task Description</mat-label>
+              <textarea
+                matInput
+                [(ngModel)]="newTask.description"
+                name="description"
+                rows="3"
+              ></textarea>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" type="submit">
+              Add Task
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Task List -->
+      <div class="task-container">
+        <mat-card *ngFor="let task of tasks; let i = index" class="task-card">
+          <mat-card-content>
+            <div style="display: flex; align-items: start; gap: 8px">
+              <mat-checkbox [(ngModel)]="task.completed">
+                {{ task.title }}
+              </mat-checkbox>
+            </div>
+
+            <p>{{ task.description }}</p>
+
+            <!-- Subtasks -->
+            <div class="subtask-list">
+              <div *ngFor="let subtask of task.subtasks; let j = index">
+                <mat-checkbox [(ngModel)]="subtask.completed">
+                  {{ subtask.title }}
+                </mat-checkbox>
+              </div>
+
+              <!-- Add Subtask -->
+              <form
+                (ngSubmit)="addSubtask(i)"
+                style="display: flex; gap: 8px; margin-top: 8px"
+              >
+                <mat-form-field appearance="outline" style="flex: 1">
+                  <mat-label>New Subtask</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="newSubtaskTitle"
+                    name="subtaskTitle"
+                  />
+                </mat-form-field>
+                <button mat-button color="primary" type="submit">Add</button>
+              </form>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
