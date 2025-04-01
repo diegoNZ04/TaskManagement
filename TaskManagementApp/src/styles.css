@@ -7,36 +7,3 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.task-container {
-  padding: 20px;
-}
-
-.task-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 600px;
-  margin-bottom: 24px;
-}
-
-.task-card {
-  margin-bottom: 16px;
-}
-
-.subtask-list {
-  margin-left: 16px;
-  margin-top: 8px;
-}
-
-.profile-content {
-  padding: 20px;
-  width: 250px;
-}
-
-.main-content {
-  padding: 20px;
-}
-
-.toolbar-spacer {
-  flex: 1 1 auto;
-}
