@@ -1,36 +1,25 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { ReactiveFormsModule } from '@angular/forms';
 import Task from '../../interfaces/task';
-
+import Subtask from '../../interfaces/subtask';
 
 @Component({
-  selector: 'app-management-panel',
-  imports: [CommonModule,
-    FormsModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatCardModule,
+  selector: 'app-task-form-input',
+  imports: [
+    ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatListModule,
-    ReactiveFormsModule],
+    MatCardModule,
+    FormsModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './management-panel.component.html',
-  styleUrl: './management-panel.component.css'
+  templateUrl: './task-form-input.component.html',
+  styleUrl: './task-form-input.component.css'
 })
-export class ManagementPanelComponent {
+export class TaskFormInputComponent {
   tasks: Task[] = [];
 
   newTask: Task = {

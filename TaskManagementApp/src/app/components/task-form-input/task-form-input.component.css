@@ -1,0 +1,19 @@
+.form-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  margin: 0 auto;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 700px;
+  margin-bottom: 24px;
+}
+
+.task-input {
+  width: 100%;
+}
