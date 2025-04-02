@@ -31,47 +31,15 @@
 
   <mat-sidenav-content>
     <div class="main-content">
-      <!-- Task Input Form -->
-
-      <!-- Task List -->
-      <div class="task-container">
-        <mat-card *ngFor="let task of tasks; let i = index" class="task-card">
-          <mat-card-content>
-            <div style="display: flex; align-items: start; gap: 8px">
-              <mat-checkbox [(ngModel)]="task.completed">
-                {{ task.title }}
-              </mat-checkbox>
-            </div>
-
-            <p>{{ task.description }}</p>
-
-            <!-- Subtasks -->
-            <div class="subtask-list">
-              <div *ngFor="let subtask of task.subtasks; let j = index">
-                <mat-checkbox [(ngModel)]="subtask.completed">
-                  {{ subtask.title }}
-                </mat-checkbox>
-              </div>
-
-              <!-- Add Subtask -->
-              <form
-                (ngSubmit)="addSubtask(i)"
-                style="display: flex; gap: 8px; margin-top: 8px"
-              >
-                <mat-form-field appearance="outline" style="flex: 1">
-                  <mat-label>New Subtask</mat-label>
-                  <input
-                    matInput
-                    [(ngModel)]="newSubtaskTitle"
-                    name="subtaskTitle"
-                  />
-                </mat-form-field>
-                <button mat-button color="primary" type="submit">Add</button>
-              </form>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+      <app-task-form-input
+        (addTask)="handleAddTask($event)"
+        class="task-form-component"
+      ></app-task-form-input>
+      <app-task-list
+        [tasks]="tasks"
+        (addSubTask)="handleAddSubtask($event)"
+        class="task-list-component"
+      ></app-task-list>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

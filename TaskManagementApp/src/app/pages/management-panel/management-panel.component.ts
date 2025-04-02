@@ -6,11 +6,15 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { ReactiveFormsModule } from '@angular/forms';
 import Task from '../../interfaces/task';
+import { TaskFormInputComponent } from '../../components/task-form-input/task-form-input.component';
+import { TaskListComponent } from "../../components/task-list/task-list.component";
+import Subtask from '../../interfaces/subtask';
 
 
 @Component({
@@ -25,59 +29,25 @@ import Task from '../../interfaces/task';
     MatCheckboxModule,
     MatIconModule,
     MatListModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+    MatButtonToggleModule,
+    TaskFormInputComponent, TaskListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './management-panel.component.html',
   styleUrl: './management-panel.component.css'
 })
-export class ManagementPanelComponent {
+export class ManagementPanelComponent implements OnInit {
   tasks: Task[] = [];
 
-  newTask: Task = {
-    title: '',
-    description: '',
-    completed: false,
-    subtasks: []
-  };
-  newSubtaskTitle: string = '';
-
   ngOnInit() {
-    // Add some sample tasks
-    this.tasks = [
-      {
-        title: 'Complete Project Proposal',
-        description: 'Write and submit the project proposal document',
-        completed: false,
-        subtasks: [
-          { title: 'Research requirements', completed: true },
-          { title: 'Create outline', completed: false }
-        ]
-      }
-    ];
+    this.tasks = [];
   }
 
-  addTask() {
-    if (this.newTask.title.trim()) {
-      this.tasks.push({
-        ...this.newTask,
-        subtasks: []
-      });
-      this.newTask = {
-        title: '',
-        description: '',
-        completed: false,
-        subtasks: []
-      };
-    }
+  handleAddTask(task: Task) {
+    this.tasks = [...this.tasks, task];
   }
 
-  addSubtask(taskIndex: number) {
-    if (this.newSubtaskTitle.trim()) {
-      this.tasks[taskIndex].subtasks.push({
-        title: this.newSubtaskTitle,
-        completed: false
-      });
-      this.newSubtaskTitle = '';
-    }
+  handleAddSubtask(event: { taskIndex: number; subtask: Subtask }) {
+    this.tasks[event.taskIndex].subtasks.push(event.subtask);
   }
 }
