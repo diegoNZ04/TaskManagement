@@ -1,0 +1,36 @@
+<div class="task-container">
+  <mat-card *ngFor="let task of tasks; let i = index" class="task-card">
+    <mat-card-content>
+      <div>
+        <mat-checkbox [(ngModel)]="task.completed">
+          {{ task.title }}
+        </mat-checkbox>
+      </div>
+
+      <p>{{ task.description }}</p>
+
+      <!-- Subtasks -->
+      <div class="subtask-list">
+        <div *ngFor="let subtask of task.subtasks; let j = index">
+          <mat-checkbox [(ngModel)]="subtask.completed">
+            {{ subtask.title }}
+          </mat-checkbox>
+        </div>
+
+        <!-- Add Subtask -->
+        <form (ngSubmit)="submitSubTask(i)" class="subtask-form">
+          <mat-form-field appearance="outline" style="flex: 1">
+            <mat-label>New Subtask</mat-label>
+            <input
+              matInput
+              [(ngModel)]="newSubtask[i]"
+              name="subtaskTitle{{ i }}"
+              class="subtask-input"
+            />
+          </mat-form-field>
+          <button mat-button color="primary" type="submit">Add</button>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

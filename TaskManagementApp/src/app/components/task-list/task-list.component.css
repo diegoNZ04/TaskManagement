@@ -1,0 +1,25 @@
+.task-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.task-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px;
+}
+
+.subtask-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.subtask-input {
+  flex: 1;
+}
