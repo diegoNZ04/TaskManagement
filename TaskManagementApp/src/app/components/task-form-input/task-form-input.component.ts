@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import Task from '../../interfaces/task';
 
 @Component({
@@ -12,6 +13,7 @@ import Task from '../../interfaces/task';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
+    MatDialogModule,
     FormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,14 +21,19 @@ import Task from '../../interfaces/task';
   styleUrl: './task-form-input.component.css'
 })
 export class TaskFormInputComponent {
-
-  @Output() addTask = new EventEmitter<Task>();
   newTask: Task = { title: '', description: '', completed: false, subtasks: [] };
+
+  constructor(
+    private dialogRef: MatDialogRef<TaskFormInputComponent>
+  ) { }
 
   submitTask() {
     if (this.newTask.title.trim()) {
-      this.addTask.emit(this.newTask);
-      this.newTask = { title: '', description: '', completed: false, subtasks: [] }
+      this.dialogRef.close(this.newTask);
     }
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }

@@ -31,10 +31,12 @@
 
   <mat-sidenav-content>
     <div class="main-content">
-      <app-task-form-input
-        (addTask)="handleAddTask($event)"
-        class="task-form-component"
-      ></app-task-form-input>
+      <div class="button-container">
+        <button mat-fab extended (click)="openDialog()">
+          <mat-icon>add</mat-icon>
+          Add Task
+        </button>
+      </div>
       <app-task-list
         [tasks]="tasks"
         (addSubTask)="handleAddSubtask($event)"

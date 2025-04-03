@@ -1,8 +1,8 @@
-.form-card {
+.task-dialog-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40%;
+  width: 100%;
   margin: 0 auto;
 }
 

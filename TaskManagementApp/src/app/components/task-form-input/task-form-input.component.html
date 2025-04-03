@@ -1,29 +1,31 @@
-<mat-card class="form-card">
-  <mat-card-content>
-    <form class="task-form" (ngSubmit)="submitTask()">
-      <mat-form-field appearance="fill">
-        <mat-label>Task Title</mat-label>
-        <input
-          matInput
-          [(ngModel)]="newTask.title"
-          name="title"
-          required
-          class="task-input"
-        />
-      </mat-form-field>
+<h2 mat-dialog-title>Add Task</h2>
+<mat-dialog-content class="task-dialog-content">
+  <form class="task-form" (ngSubmit)="submitTask()">
+    <mat-form-field appearance="fill">
+      <mat-label>Task Title</mat-label>
+      <input
+        matInput
+        [(ngModel)]="newTask.title"
+        name="title"
+        required
+        class="task-input"
+      />
+    </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Task Description</mat-label>
-        <textarea
-          matInput
-          [(ngModel)]="newTask.description"
-          name="description"
-          rows="3"
-          class="task-input"
-        ></textarea>
-      </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Task Description</mat-label>
+      <textarea
+        matInput
+        [(ngModel)]="newTask.description"
+        name="description"
+        rows="3"
+        class="task-input"
+      ></textarea>
+    </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit">Add Task</button>
-    </form>
-  </mat-card-content>
-</mat-card>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="closeDialog()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </mat-dialog-actions>
+  </form>
+</mat-dialog-content>
