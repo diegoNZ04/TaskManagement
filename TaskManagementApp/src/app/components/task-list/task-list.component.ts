@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import Task from '../../interfaces/task';
 import Subtask from '../../interfaces/subtask';
@@ -13,12 +13,12 @@ import Subtask from '../../interfaces/subtask';
   selector: 'app-task-list',
   imports: [
     FormsModule,
-    MatCardModule,
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
     MatListModule,
-    CommonModule
+    MatExpansionModule,
+    CommonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './task-list.component.html',

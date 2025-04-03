@@ -1,13 +1,19 @@
+<!-- Atualização -->
 <div class="task-container">
-  <mat-card *ngFor="let task of tasks; let i = index" class="task-card">
-    <mat-card-content>
-      <div>
-        <mat-checkbox [(ngModel)]="task.completed">
+  <mat-accordion>
+    <mat-expansion-panel
+      *ngFor="let task of tasks; let i = index"
+      class="task-card"
+    >
+      <mat-expansion-panel-header>
+        <mat-checkbox [(ngModel)]="task.completed"></mat-checkbox>
+        <mat-panel-title>
           {{ task.title }}
-        </mat-checkbox>
-      </div>
-
-      <p>{{ task.description }}</p>
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ task.description }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
       <!-- Subtasks -->
       <div class="subtask-list">
@@ -31,6 +37,6 @@
           <button mat-button color="primary" type="submit">Add</button>
         </form>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>
