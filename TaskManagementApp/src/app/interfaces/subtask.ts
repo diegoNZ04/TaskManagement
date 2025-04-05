@@ -1,4 +1,5 @@
 export default interface Subtask {
-  title: string;
-  completed: boolean;
+  description: string;
+  isCompleted: boolean;
+  completedAt: Date | null;
 }

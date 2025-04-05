@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import Task from '../../interfaces/task';
@@ -19,6 +20,7 @@ import Subtask from '../../interfaces/subtask';
     MatListModule,
     MatExpansionModule,
     CommonModule,
+    MatChipsModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './task-list.component.html',
@@ -31,11 +33,12 @@ export class TaskListComponent {
   newSubtask: { [index: number]: string } = {};
 
   onAddSubtask(taskIndex: number): void {
-    const title = this.newSubtask[taskIndex]?.trim();
-    if (title) {
+    const description = this.newSubtask[taskIndex]?.trim();
+    if (description) {
       const subtask: Subtask = {
-        title,
-        completed: false
+        description,
+        isCompleted: false,
+        completedAt: null
       };
       this.addSubTask.emit({ taskIndex, subtask });
       this.newSubtask[taskIndex] = '';

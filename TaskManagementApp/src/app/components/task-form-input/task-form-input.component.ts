@@ -2,19 +2,22 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Inject } from '@angul
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import Task from '../../interfaces/task';
+import Priority from '../../interfaces/priority';
 
 @Component({
   selector: 'app-task-form-input',
   imports: [
+    FormsModule,
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
-    FormsModule,
+    MatSelectModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './task-form-input.component.html',
@@ -38,6 +41,19 @@ export class TaskFormInputComponent {
   }
 
   private createEmptyTask(): Task {
-    return { title: '', description: '', completed: false, subtasks: [] };
+    return {
+      title: '',
+      description: '',
+      isCompleted: false,
+      priority: '',
+      completedAt: null,
+      subtasks: []
+    };
   }
+
+  priorityOptions: Priority[] = [
+    { value: 'high', viewValue: 'High' },
+    { value: 'medium', viewValue: 'Medium' },
+    { value: 'low', viewValue: 'Low' }
+  ];
 }

@@ -6,20 +6,25 @@
       class="task-card"
     >
       <mat-expansion-panel-header>
-        <mat-checkbox [(ngModel)]="task.completed"></mat-checkbox>
-        <mat-panel-title>
+        <mat-checkbox [(ngModel)]="task.isCompleted"></mat-checkbox>
+        <mat-panel-title style="font-size: large">
           {{ task.title }}
         </mat-panel-title>
-        <mat-panel-description>
-          {{ task.description }}
-        </mat-panel-description>
       </mat-expansion-panel-header>
+      <h4 style="margin: 5px">Description:</h4>
+      <p style="margin: 0">{{ task.description }}</p>
+
+      <mat-chip-set>
+        <mat-chip>
+          {{ task.priority }}
+        </mat-chip>
+      </mat-chip-set>
 
       <!-- Subtasks -->
       <div class="subtask-list">
         <div *ngFor="let subtask of task.subtasks; let j = index">
-          <mat-checkbox [(ngModel)]="subtask.completed">
-            {{ subtask.title }}
+          <mat-checkbox [(ngModel)]="subtask.isCompleted">
+            {{ subtask.description }}
           </mat-checkbox>
         </div>
 

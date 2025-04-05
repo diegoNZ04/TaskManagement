@@ -23,6 +23,15 @@
       ></textarea>
     </mat-form-field>
 
+    <mat-form-field>
+      <mat-label>Task Priority</mat-label>
+      <mat-select [(ngModel)]="newTask.priority" name="priority">
+        @for(p of priorityOptions; track p){
+        <mat-option [value]="p.value">{{ p.viewValue }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
     <mat-dialog-actions align="end">
       <button mat-button (click)="closeDialog()">Cancel</button>
       <button mat-raised-button color="primary" type="submit">Submit</button>
