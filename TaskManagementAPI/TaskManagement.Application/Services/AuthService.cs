@@ -44,11 +44,9 @@ public class AuthService : IAuthService
 
         var token = _jwtService.GenerateToken(user);
 
-        var loginReq = _mapper.Map<User>(new LoginUserResponse
-        {
-            Token = token
-        });
+        var response = _mapper.Map<LoginUserResponse>(user);
+        response.Token = token;
 
-        return _mapper.Map<LoginUserResponse>(loginReq);
+        return response;
     }
 }
