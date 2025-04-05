@@ -35,8 +35,8 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './management-panel.component.css'
 })
 export class ManagementPanelComponent implements OnInit {
-  readonly dialog = inject(MatDialog);
-  private cdr = inject(ChangeDetectorRef);
+  private readonly dialog = inject(MatDialog);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   tasks: Task[] = [];
 
@@ -44,16 +44,17 @@ export class ManagementPanelComponent implements OnInit {
     this.tasks = [];
   }
 
-  handleAddSubtask(event: { taskIndex: number; subtask: Subtask }) {
+  handleAddSubtask(event: { taskIndex: number; subtask: Subtask }): void {
     this.tasks[event.taskIndex].subtasks.push(event.subtask);
+    this.cdr.detectChanges();
   }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TaskFormInputComponent);
 
-    dialogRef.afterClosed().subscribe((result: Task) => {
-      if (result) {
-        this.tasks = [...this.tasks, result];
+    dialogRef.afterClosed().subscribe((newTask: Task | undefined) => {
+      if (newTask) {
+        this.tasks = [...this.tasks, newTask];
         this.cdr.detectChanges();
       }
     });

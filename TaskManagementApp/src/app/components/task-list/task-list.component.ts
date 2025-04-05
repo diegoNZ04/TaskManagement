@@ -26,14 +26,18 @@ import Subtask from '../../interfaces/subtask';
 })
 export class TaskListComponent {
   @Input() tasks: Task[] = [];
-
   @Output() addSubTask = new EventEmitter<{ taskIndex: number; subtask: Subtask }>();
-  newSubtask: { [key: number]: string } = {};
 
-  submitSubTask(taskIndex: number) {
+  newSubtask: { [index: number]: string } = {};
+
+  onAddSubtask(taskIndex: number): void {
     const title = this.newSubtask[taskIndex]?.trim();
     if (title) {
-      this.addSubTask.emit({ taskIndex, subtask: { title, completed: false } });
+      const subtask: Subtask = {
+        title,
+        completed: false
+      };
+      this.addSubTask.emit({ taskIndex, subtask });
       this.newSubtask[taskIndex] = '';
     }
   }

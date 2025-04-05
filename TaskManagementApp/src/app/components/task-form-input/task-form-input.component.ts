@@ -21,19 +21,23 @@ import Task from '../../interfaces/task';
   styleUrl: './task-form-input.component.css'
 })
 export class TaskFormInputComponent {
-  newTask: Task = { title: '', description: '', completed: false, subtasks: [] };
+  newTask: Task = this.createEmptyTask();
 
   constructor(
     private dialogRef: MatDialogRef<TaskFormInputComponent>
   ) { }
 
-  submitTask() {
+  submitTask(): void {
     if (this.newTask.title.trim()) {
       this.dialogRef.close(this.newTask);
     }
   }
 
-  closeDialog() {
+  closeDialog(): void {
     this.dialogRef.close();
+  }
+
+  private createEmptyTask(): Task {
+    return { title: '', description: '', completed: false, subtasks: [] };
   }
 }
