@@ -16,7 +16,6 @@ public class CreateTaskValidator : AbstractValidator<CreateTaskRequest>
             .MaximumLength(255).WithMessage("Description must not exceed 255 characters");
 
         RuleFor(task => task.Priority)
-            .NotEmpty().WithMessage("Priority is required")
             .IsInEnum().WithMessage("Priority is not valid");
 
         RuleFor(task => task.UserId)
