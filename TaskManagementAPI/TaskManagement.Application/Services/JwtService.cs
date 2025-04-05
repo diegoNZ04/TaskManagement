@@ -68,12 +68,12 @@ public class JwtService : IJwtService
         try
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]);
+            var key = new SymmetricSecurityKey(Convert.FromBase64String(_config["JwtSettings:Key"]));
 
             tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = key,
                 ValidateIssuer = true,
                 ValidIssuer = _config["JwtSettings:Issuer"],
                 ValidateAudience = true,
